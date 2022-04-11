@@ -1,0 +1,2 @@
+# chopsticks
+Chopsticks Reinforcement Learning
