@@ -12,3 +12,7 @@ class SendError(Exception):
 
 class GameOver(Exception):
     pass
+
+
+class TooManyMoves(Exception):
+    pass
