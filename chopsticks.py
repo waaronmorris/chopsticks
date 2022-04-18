@@ -6,6 +6,7 @@ from player_actions_exception import *
 
 dbname = get_database()
 
+global HAND_ID
 HAND_ID = 0
 
 
@@ -54,9 +55,13 @@ class Game:
                   'game_id': self.game_id,
                   'game_uuid': self.game_uuid,
                   'player_id': action.from_hand.player.player_id,
+                  'hand_num': action.from_hand.hand_num,
                   'player_num': action.from_hand.player.player_num,
                   'player_move_number': action.from_hand.player.move_count,
                   'action': action.event_type,
+                  'to_player': action.to_hand.player.player_num,
+                  'to_hand': action.to_hand.hand_num,
+                  'number_sent': action.number_sent,
                   'state_str': ','.join([str(stick) for stick, _ in self.get_state()]),
                   'reward': 0
                   }

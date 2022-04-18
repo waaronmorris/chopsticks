@@ -18,8 +18,8 @@ def split_sticks(_from: "Hand", _to: "Hand", number_sent: int):
             raise SplitError("cannot split hand over 5")
         _from.set_sticks(_from.get_sticks() - number_sent)
         _to.set_sticks(_to.get_sticks() + number_sent)
-    return [Hand(_from.hand_id, _from.get_sticks() - number_sent, _from.player),
-            Hand(_to.hand_id, _to.get_sticks() + number_sent, _to.player)]
+    return [Hand(_from.hand_id, _from.hand_num, _from.get_sticks() - number_sent, _from.player),
+            Hand(_to.hand_id, _to.hand_num,  _to.get_sticks() + number_sent, _to.player)]
 
 
 def send_sticks(_from: "Hand", _to: "Hand", **kwargs):
@@ -28,7 +28,7 @@ def send_sticks(_from: "Hand", _to: "Hand", **kwargs):
     if _to.get_sticks() <= 0:
         raise SendError("cannot send to dead hand")
     # _to.set_sticks(_to.get_sticks() + _from.get_sticks())
-    return [Hand(_to.hand_id, (_to.get_sticks() + _from.get_sticks()) % 5, _to.player)]
+    return [Hand(_to.hand_id, _to.hand_num, (_to.get_sticks() + _from.get_sticks()) % 5, _to.player)]
 
 
 class EVENT_TYPE(Enum):

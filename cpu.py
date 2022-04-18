@@ -53,7 +53,7 @@ class RandomChopstickModel(BaseChopstickModel):
             raise TurnError(f"Player:{self.player.player_num}|Dead")
 
         while from_hand is None:
-            i_hand = randint(0, len(self.player.hands) - 1)
+            i_hand = randint(0, len(self.player.hands)-1)
             if self.player.hands[i_hand].get_sticks() > 0:
                 from_hand = self.player.hands[i_hand]
 

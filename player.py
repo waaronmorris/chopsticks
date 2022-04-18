@@ -55,7 +55,7 @@ class Player:
         cls.player_count = cls.player_count + 1
 
     def change_hand(self, hand):
-        self.hands[hand.hand_id] = hand
+        self.hands[hand.hand_num] = hand
 
     @property
     def dead_hands(self):

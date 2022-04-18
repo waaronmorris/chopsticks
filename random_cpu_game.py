@@ -1,12 +1,12 @@
-from uuid import uuid4
 from time import sleep
+from uuid import uuid4
 
 from chopsticks import Game, create_player
 from cpu import RandomChopstickModel
 from db import get_database
 from player_actions_exception import *
 
-for j in range(0, 10**4):
+for j in range(0, 10 ** 4):
     print("new_game")
     game = Game()
     players = [create_player(2, 1, RandomChopstickModel) for i in range(0, 3)]
@@ -71,12 +71,12 @@ for j in range(0, 10**4):
                 collection_name = dbname["state"]
                 collection_name.insert_one(states)
 
-            dbname = get_database()
-            collection_name = dbname["actions"]
-            collection_name.insert_many([action.__dict__() for action in actions])
+            # dbname = get_database()
+            # collection_name = dbname["actions"]
+            # collection_name.insert_many([action.__dict__() for action in actions])
 
             dbname = get_database()
             collection_name = dbname["game"]
             collection_name.insert_one(game.__dict__())
     print("Game Over")
-    sleep(5)
+    sleep(30)
