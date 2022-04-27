@@ -54,6 +54,7 @@ class RandomChopstickModel(BaseChopstickModel):
 
         while from_hand is None:
             i_hand = randint(0, len(self.player.hands)-1)
+            print(i_hand)
             if self.player.hands[i_hand].get_sticks() > 0:
                 from_hand = self.player.hands[i_hand]
 

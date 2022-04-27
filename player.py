@@ -43,8 +43,8 @@ class Hand:
 class Player:
     player_count = 0
 
-    def __init__(self):
-        self.player_num = self.player_count
+    def __init__(self, player_num):
+        self.player_num = player_num
         self.add_player_count()
         self.hands: {int, Hand} = {}
         self.player_id = uuid4()
@@ -79,9 +79,9 @@ class Player:
 
 
 class ComputerPlayer(Player):
-    def __init__(self, model):
+    def __init__(self, player_num, model):
         self.model = model(self)
-        super(ComputerPlayer, self).__init__()
+        super(ComputerPlayer, self).__init__(player_num)
 
     def formulate_action(self, game_state):
         action: "PlayerAction" = self.model.execute(game_state)

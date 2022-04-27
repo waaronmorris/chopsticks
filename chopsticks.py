@@ -10,14 +10,14 @@ global HAND_ID
 HAND_ID = 0
 
 
-def create_player(hand_count, starting_sticks, model=None):
+def create_player(player_num, hand_count, starting_sticks: [], model=None):
     global HAND_ID
     if model:
-        player = ComputerPlayer(model=model)
+        player = ComputerPlayer(player_num=player_num, model=model)
     else:
-        player = Player()
+        player = Player(player_num)
     for i in range(0, hand_count):
-        player.change_hand(Hand(hand_id=HAND_ID, hand_num=i, sticks=starting_sticks, player=player))
+        player.change_hand(Hand(hand_id=HAND_ID, hand_num=i, sticks=starting_sticks[i], player=player))
         HAND_ID = HAND_ID + 1
     return player
 
@@ -44,6 +44,7 @@ class Game:
 
     def register_player(self, player):
         self.active_players.append(player)
+        player.player_num = len(self.active_players) - 1
 
     def is_game_over(self):
         if len(self.active_players) == 1:
@@ -87,6 +88,10 @@ class Game:
                 self.dead_players.append(self.active_players.pop(self.active_players.index(action.to_hand.player)))
                 print(f"ELIMINATED|{action.to_hand.player.player_id}")
 
+            if action.from_hand.player.live_hands == 0 and action.from_hand.player in self.active_players :
+                self.dead_players.append(self.active_players.pop(self.active_players.index(action.from_hand.player)))
+                print(f"ELIMINATED|{action.from_hand.player.player_id}")
+
             self.active_players.append(self.active_players.pop(self.active_players.index(self.active_players[0])))
 
             if self.is_game_over():
@@ -98,7 +103,7 @@ class Game:
             action.from_hand.player.make_move()
             self.move_counter = self.move_counter + 1
             return action
-        elif self.move_counter >= 10 ** 4:
+        elif self.move_counter >= 100:
             raise GameOver(f"Infinite Game")
         raise GameOver(f"WINNER|{self.active_players[0]}")
 

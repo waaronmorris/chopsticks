@@ -13,13 +13,15 @@ def split_sticks(_from: "Hand", _to: "Hand", number_sent: int):
         raise SplitError("cannot split with different active_players")
     if _from == _to:
         raise SplitError("cannot split with same hand")
-    if _from.hand_dead:
-        if ((_from.get_sticks() - number_sent) >= 5) or (_to.get_sticks() + number_sent) >= 5:
-            raise SplitError("cannot split hand over 5")
-        _from.set_sticks(_from.get_sticks() - number_sent)
-        _to.set_sticks(_to.get_sticks() + number_sent)
-    return [Hand(_from.hand_id, _from.hand_num, _from.get_sticks() - number_sent, _from.player),
-            Hand(_to.hand_id, _to.hand_num,  _to.get_sticks() + number_sent, _to.player)]
+    if _from.hand_dead == 1:
+        raise SplitError("cannot split dead hand")
+    if (_from.get_sticks() - number_sent) < 0:
+        raise SplitError("cannot send more than hand")
+    if (_to.get_sticks() + number_sent) >= 5:
+        raise SplitError("cannot split hand over 5")
+
+    return [Hand(_from.hand_id, _from.hand_num, (_from.get_sticks() - number_sent) % 5, _from.player),
+            Hand(_to.hand_id, _to.hand_num,  (_to.get_sticks() + number_sent) % 5, _to.player)]
 
 
 def send_sticks(_from: "Hand", _to: "Hand", **kwargs):
