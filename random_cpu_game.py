@@ -1,3 +1,4 @@
+from random import randint
 from time import sleep
 from uuid import uuid4
 
@@ -8,7 +9,7 @@ from player_actions_exception import *
 
 player_count = 3
 
-for j in range(0, 10 ** 4):
+for i_game in range(0, 10 ** 4):
     print("New Game")
     game = Game()
 
@@ -84,11 +85,11 @@ for j in range(0, 10 ** 4):
             dbname = get_database()
             collection_name = dbname["game"]
             collection_name.insert_one(game.__dict__())
-
-    print("Game Over")
-    print("Updating State Change")
-    # get_database().collection('state_change').deleteMany({})
-    get_database()['state'].aggregate([
+    if (i_game > 0) and (i_game % 100 == 0):
+        print("Game Over")
+        print("Updating State Change")
+        # get_database().collection('state_change').deleteMany({})
+        get_database()['state'].aggregate([
         {
             '$addFields': {
                 'next_move': {
@@ -157,9 +158,9 @@ for j in range(0, 10 ** 4):
         }
     ])
 
-    print("Updating State Transitions")
-    # get_database().collection('state_transitions').deleteMany({})
-    get_database()['state_change'].aggregate([
+        print("Updating State Transitions")
+        # get_database().collection('state_transitions').deleteMany({})
+        get_database()['state_change'].aggregate([
         {
             '$group': {
                 '_id': {
@@ -207,9 +208,9 @@ for j in range(0, 10 ** 4):
         }
     ])
 
-    print("Updating State Summary")
-    # get_database().collection('state_changes_summary').deleteMany({})
-    get_database()['state_change'].aggregate([
+        print("Updating State Summary")
+        # get_database().collection('state_changes_summary').deleteMany({})
+        get_database()['state_change'].aggregate([
         {
             '$lookup': {
                 'from': 'state_transitions',
@@ -254,4 +255,4 @@ for j in range(0, 10 ** 4):
         }
     ])
 
-    sleep(5)
+    sleep(randint(0, 60))
