@@ -43,8 +43,9 @@ class Hand:
 class Player:
     player_count = 0
 
-    def __init__(self, player_num):
+    def __init__(self, player_num, player_type='User'):
         self.player_num = player_num
+        self.player_type = player_type
         self.add_player_count()
         self.hands: {int, Hand} = {}
         self.player_id = uuid4()
@@ -74,15 +75,16 @@ class Player:
     def __dict__(self):
         return {'player_id': self.player_id,
                 'player_num': self.player_num,
+                'player_type': self.player_type,
                 'hands': [hand.__dict__() for hand in self.hands.values()]
                 }
 
 
 class ComputerPlayer(Player):
-    def __init__(self, player_num, model):
+    def __init__(self, player_num, model, player_type='Computer'):
         self.model = model(self)
-        super(ComputerPlayer, self).__init__(player_num)
+        super(ComputerPlayer, self).__init__(player_num, player_type)
 
-    def formulate_action(self, game_state):
-        action: "PlayerAction" = self.model.execute(game_state)
+    def formulate_action(self, game):
+        action: "PlayerAction" = self.model.execute(game)
         return action

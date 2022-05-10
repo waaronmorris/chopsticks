@@ -1,7 +1,7 @@
-from chopsticks import Game, create_player
-from cpu import BaseChopstickModel
+from chopsticks.chopsticks import Game, create_player
+from chopsticks.cpu import BaseChopstickModel
 import bson
-from db import get_database
+from chopsticks.db import get_database
 
 game = Game()
 player1 = create_player(2, 1, BaseChopstickModel)

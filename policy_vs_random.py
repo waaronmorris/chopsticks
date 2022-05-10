@@ -3,19 +3,19 @@ from time import sleep
 from uuid import uuid4
 
 from chopsticks.chopsticks import Game, create_player
-from chopsticks.cpu import RandomChopstickModel
+from chopsticks.cpu import RandomChopstickModel, TwoPlayerPolicy
 from chopsticks.db import get_database, get_state_counts, update_game_state
 from chopsticks.player_actions_exception import *
 
-player_count = 3
-
+player_count = 2
 
 for i_game in range(0, 10 ** 4):
     print("New Game")
     game = Game()
 
-    hands = get_state_counts()
-    players = [create_player(i, 2, hands[i], RandomChopstickModel) for i in range(0, player_count)]
+    players = [
+               create_player(0, 2, [1, 1], TwoPlayerPolicy, player_type='MDP1'),
+               create_player(1, 2, [1, 1], TwoPlayerPolicy, player_type="MDP2")]
 
     [game.register_player(player) for player in players]
     actions = []
@@ -25,11 +25,13 @@ for i_game in range(0, 10 ** 4):
     while game_over:
         print(game.get_state())
         try:
-            action = players[x % player_count].formulate_action(game_state=game.get_state())
+            if isinstance(players[x % player_count].model, TwoPlayerPolicy):
+                action = players[x % player_count].formulate_action(game=game)
+            else:
+                action = players[x % player_count].formulate_action(game=game.get_state())
             actions.append(game.play_turn(action))
             successful_play = False
             x = (x + 1) % player_count
-            print(action)
         except SplitError as e:
             print(e)
             successful_play = True
@@ -100,5 +102,3 @@ for i_game in range(0, 10 ** 4):
     if (i_game > 0) and (i_game % 100 == 0):
         print("Game Over")
         update_game_state()
-
-    sleep(randint(0, 60))

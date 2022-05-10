@@ -2,8 +2,8 @@ from datetime import datetime
 from enum import Enum
 from uuid import uuid4
 
-from player import Hand
-from player_actions_exception import *
+from chopsticks.player import Hand
+from chopsticks.player_actions_exception import *
 
 PLAYER_ACTION_COUNT = 0
 
@@ -19,9 +19,11 @@ def split_sticks(_from: "Hand", _to: "Hand", number_sent: int):
         raise SplitError("cannot send more than hand")
     if (_to.get_sticks() + number_sent) >= 5:
         raise SplitError("cannot split hand over 5")
+    # if _to.get_sticks() == _from.get_sticks():
+    #     raise SplitError("cannot split same number")
 
     return [Hand(_from.hand_id, _from.hand_num, (_from.get_sticks() - number_sent) % 5, _from.player),
-            Hand(_to.hand_id, _to.hand_num,  (_to.get_sticks() + number_sent) % 5, _to.player)]
+            Hand(_to.hand_id, _to.hand_num, (_to.get_sticks() + number_sent) % 5, _to.player)]
 
 
 def send_sticks(_from: "Hand", _to: "Hand", **kwargs):
@@ -66,6 +68,6 @@ class PlayerAction:
         }
 
     def __repr__(self):
-        return f"{self.event_type}|" \
-               f"{self.from_hand.player.player_num},{self.from_hand.hand_id}|" \
-               f"{self.to_hand.player.player_num},{self.to_hand.hand_id}"
+        return f"{self.event_type}|"
+        f"{self.from_hand.player.player_num},{self.from_hand.hand_id}|" \
+        f"{self.to_hand.player.player_num},{self.to_hand.hand_id}"
